@@ -36,12 +36,9 @@ export default function Survey() {
   });
 
   const onSubmit: SubmitHandler<Survey> = async (data: Survey) => {
-    let valid = true;
-
     if (data.satisfaction === 0) {
       trigger('satisfaction')
       setError('satisfaction', { message: 'Satisfaction is required' });
-      valid = false;
     } else {
       clearErrors('satisfaction');
     }
@@ -49,22 +46,14 @@ export default function Survey() {
     if (data.nps === -1) {
       trigger('nps')
       setError('nps', { message: 'NPS score is required' });
-      valid = false;
     } else {
       clearErrors('nps');
     }
 
-    if (!valid) return;
-
     try {
-      if (data.feedback?.includes('error')) {
-        // simulate API error
-        throw new Error();
-      } else {
-        await surveyService.save(data);
-        console.log('Survey submitted:', data);
-        reset();
-      }
+      await surveyService.save(data);
+      console.log('Survey submitted:', data);
+      reset();
     } catch {
       setError('root', { message: 'Failed to submit. Please try again.' });
     }
@@ -136,9 +125,14 @@ export default function Survey() {
           />
         </div>
 
-        <Button type="submit" className={isSubmitting ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}>
-          Submit
-        </Button>
+        <div className="flex gap-2">
+          <Button type="submit" disabled={isSubmitting}>
+            Submit
+          </Button>
+          <Button onClick={() => reset()}>
+            Clear
+          </Button>
+        </div>
 
         {isSubmitSuccessful && (
           <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded">

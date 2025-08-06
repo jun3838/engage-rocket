@@ -1,11 +1,11 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 interface CardProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
-export default function Card({ children, className = '' }: CardProps) {
+export default function Card({ children, className = ''}: CardProps) {
   return (
     <div className={`bg-white p-4 rounded shadow ${className}`}>
       {children}
