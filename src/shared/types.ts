@@ -24,4 +24,8 @@ export interface Analytics {
     count: number;
     avgSatisfaction: number;
   }[];
+  npsDistribution: {
+    nps: number;
+    count: number;
+  }[];
 }
