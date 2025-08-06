@@ -1,4 +1,4 @@
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { type SubmitHandler, useForm, Controller } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
 import Card from '@/shared/components/Card';
@@ -22,9 +22,7 @@ export default function Survey() {
     formState: { errors, isSubmitting, isSubmitSuccessful },
     setError,
     reset,
-    setValue,
-    watch,
-    trigger,
+    control,
     clearErrors
   } = useForm<Survey>({
     defaultValues: {
@@ -38,14 +36,12 @@ export default function Survey() {
 
   const onSubmit: SubmitHandler<Survey> = async (data: Survey) => {
     if (data.satisfaction === 0) {
-      trigger('satisfaction')
       setError('satisfaction', { message: 'Satisfaction is required' });
     } else {
       clearErrors('satisfaction');
     }
 
     if (data.nps === -1) {
-      trigger('nps')
       setError('nps', { message: 'NPS score is required' });
     } else {
       clearErrors('nps');
@@ -75,28 +71,44 @@ export default function Survey() {
               validate: (v) => v > 0 || 'Satisfaction is required.',
             })}
           />
-          <StarRating
-            value={watch('satisfaction')}
-            onChange={(rating) => setValue('satisfaction', rating, { shouldValidate: true })}
+          <Controller
+            name="satisfaction"
+            control={control}
+            rules={{
+              validate: (value) => value > 0 || 'Satisfaction is required.'
+            }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <StarRating
+                  value={value}
+                  onChange={(rating) => onChange(rating)}
+                />
+                <FormError message={error?.message} />
+              </>
+            )}
           />
-          <FormError message={errors.satisfaction?.message} />
         </div>
 
         <div>
           <label className="block mb-1 font-medium">
             2. How likely are you to recommend us?
           </label>
-          <input
-            type="hidden"
-            {...register('nps', {
-              validate: (v) => v >= 0 || 'NPS score is required.',
-            })}
+          <Controller
+            name="nps"
+            control={control}
+            rules={{
+              validate: (value) => value >= 0 || 'NPS score is required.'
+            }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <>
+                <NumberRating
+                  value={value}
+                  onChange={(rating) => onChange(rating)}
+                />
+                <FormError message={error?.message} />
+              </>
+            )}
           />
-           <NumberRating
-            value={watch('nps')}
-            onChange={(score) => setValue('nps', score, { shouldValidate: true })}
-          />
-          <FormError message={errors.nps?.message} />
         </div>
 
         <div>
