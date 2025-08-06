@@ -1,5 +1,9 @@
 import { SurveyResponse, Analytics } from '@/shared/types';
 
+/**
+ * Generates a distribution of NPS scores (0–10) as a histogram data structure.
+ * Each score key maps to the count of how many users selected it.
+ */
 function generateNPSDistribution(data: SurveyResponse[]) {
   if (data.length === 0) return [];
 
@@ -9,6 +13,10 @@ function generateNPSDistribution(data: SurveyResponse[]) {
   return Object.entries(bins).map(([nps, count]) => ({ nps: Number(nps), count }));
 }
 
+/**
+ * Calculates NPS from responses.
+ * Promoters (9–10), Detractors (0–6), NPS = %Promoters - %Detractors
+ */
 function calculateNPS(responses: SurveyResponse[]): number {
   if (responses.length === 0) return 0;
 
@@ -24,6 +32,10 @@ function calculateNPS(responses: SurveyResponse[]): number {
   return Math.round(npsScore);
 }
 
+/**
+ * Get the average satisfaction score per department.
+ * Returns an array with department name, number of responses, and average score.
+ */
 function generateDepartmentSatisfaction(responses: SurveyResponse[]) {
   const map: Record<string, { total: number; count: number }> = {};
   responses.forEach((r) => {
@@ -38,6 +50,11 @@ function generateDepartmentSatisfaction(responses: SurveyResponse[]) {
   }));
 }
 
+/**
+ * Computes summary analytics from a list of survey responses.
+ * Includes total count, average satisfaction, NPS score,
+ * department breakdown, and NPS score distribution.
+ */
 export function computeAnalytics(responses: SurveyResponse[]): Analytics {
   const totalResponses = responses.length;
   const avgSatisfaction = responses.reduce((sum, r) => sum + Number(r.satisfaction), 0) / totalResponses;
