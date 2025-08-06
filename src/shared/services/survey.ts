@@ -19,6 +19,11 @@ export const surveyService = {
     // simulate fetching from an API
     await new Promise((resolve) => setTimeout(resolve, 500));
 
+    // simulate an error
+    if (surveyData.feedback?.includes('error')) {
+      throw new Error();
+    }
+
     const existing = await surveyService.getAll();
     const payload = {
       ...surveyData,
