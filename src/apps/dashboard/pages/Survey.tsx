@@ -6,6 +6,7 @@ import { surveyService } from '@/shared/services/survey';
 import StarRating from '@/shared/components/StarRating';
 import NumberRating from '@/shared/components/NumberRating';
 import { type Survey } from '@/shared/types';
+import FormError from '@/shared/components/FormError';
 
 const departments = [
   'Engineering',
@@ -78,7 +79,7 @@ export default function Survey() {
             value={watch('satisfaction')}
             onChange={(rating) => setValue('satisfaction', rating, { shouldValidate: true })}
           />
-          {errors.satisfaction && <p className="text-red-500 text-sm">{errors.satisfaction.message}</p>}
+          <FormError message={errors.satisfaction?.message} />
         </div>
 
         <div>
@@ -95,7 +96,7 @@ export default function Survey() {
             value={watch('nps')}
             onChange={(score) => setValue('nps', score, { shouldValidate: true })}
           />
-          {errors.nps && <p className="text-red-500 text-sm">{errors.nps.message}</p>}
+          <FormError message={errors.nps?.message} />
         </div>
 
         <div>
@@ -111,7 +112,7 @@ export default function Survey() {
               <option key={dept} value={dept}>{dept}</option>
             ))}
           </select>
-          {errors.department && <p className="text-red-500 text-sm">{errors.department.message}</p>}
+          <FormError message={errors.department?.message} />
         </div>
 
         <div>
