@@ -11,7 +11,7 @@ export default function StarRating({ value, onChange }: StarRatingProps) {
   const activeValue = hover !== null ? hover : value;
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-1 flex-wrap">
       {[1, 2, 3, 4, 5].map((star) => {
         const isActive = activeValue >= star;
         return(

@@ -10,7 +10,7 @@ export default function NumberRating({ value, onChange }: NumberRatingProps) {
   const activeValue = hover !== null ? hover : value;
 
   return (
-    <div className="flex space-x-1">
+    <div className="flex space-x-1 flex-wrap">
       {Array.from({ length: 11 }, (_, idx) => {
         const isActive = activeValue >= idx;
         return (
