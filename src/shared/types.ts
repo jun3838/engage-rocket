@@ -18,7 +18,7 @@ export interface SurveyPayload extends Survey {
 export interface Analytics {
   totalResponses: number;
   avgSatisfaction: number;
-  avgNPS: number;
+  npsScore: number;
   departmentBreakdown: {
     department: string;
     count: number;

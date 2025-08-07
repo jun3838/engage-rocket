@@ -17,23 +17,27 @@ export default function Dashboard() {
   const [responses, setResponses] = useState<SurveyResponse[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
-  async function fetchSurveyResponses(): Promise<void> {
-    const responses = await surveyService.getAll();
-    setResponses(responses);
-    setAnalytics(computeAnalytics(responses));
-  }
-
   // fetch survey responses on mount
   useEffect(() => {
+    async function fetchSurveyResponses(): Promise<void> {
+      const responses = await surveyService.getAll();
+      setResponses(responses);
+
+      const analyticsData = computeAnalytics(responses);
+      setAnalytics(analyticsData);
+    }
+
     fetchSurveyResponses();
   }, [])
+
+  if (!analytics) return <div className="flex items-center justify-center h-screen w-screen">Loading...</div>
 
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <Card>Total Responses: {analytics?.totalResponses}</Card>
         <Card>Avg Satisfaction: {analytics?.avgSatisfaction.toFixed(1)}</Card>
-        <Card>NPS score: {analytics?.avgNPS}</Card>
+        <Card>NPS score: {analytics?.npsScore}</Card>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -66,7 +66,7 @@ export function computeAnalytics(responses: SurveyResponse[]): Analytics {
   return {
     totalResponses,
     avgSatisfaction,
-    avgNPS: npsScore,
+    npsScore,
     departmentBreakdown,
     npsDistribution,
   };
