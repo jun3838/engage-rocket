@@ -23,24 +23,11 @@ export default function Survey() {
     setError,
     reset,
     control,
-    clearErrors
   } = useForm<Survey>();
 
   const { save } = useSurveyService();
 
   const onSubmit: SubmitHandler<Survey> = async (data: Survey) => {
-    if (data.satisfaction === 0) {
-      setError('satisfaction', { message: 'Satisfaction is required' });
-    } else {
-      clearErrors('satisfaction');
-    }
-
-    if (data.nps === -1) {
-      setError('nps', { message: 'NPS score is required' });
-    } else {
-      clearErrors('nps');
-    }
-
     try {
       await save(data);
       console.log('Survey submitted:', data);

@@ -1,4 +1,3 @@
-// src/routes.ts
 export const ROUTES = {
   HOME: '/',
   DASHBOARD: '/dashboard',
