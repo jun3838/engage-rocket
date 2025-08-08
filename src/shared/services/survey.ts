@@ -1,9 +1,9 @@
 import { SurveyResponse, Survey } from '@/shared/types';
 
-const STORAGE_KEY = 'surveyResponses';
+const useSurveyService = () => {
+  const STORAGE_KEY = 'survey-response';
 
-export const surveyService = {
-  async getAll(): Promise<SurveyResponse[]> {
+  const getResponse = async (): Promise<SurveyResponse[]> => {
     const raw = localStorage.getItem(STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : [];
 
@@ -13,9 +13,9 @@ export const surveyService = {
     return parsed.sort((a: SurveyResponse, b: SurveyResponse) =>
       new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
     )
-  },
+  }
 
-  async save(surveyData: Survey): Promise<void> {
+  const save = async (surveyData: Survey): Promise<void> => {
     // simulate fetching from an API
     await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -24,7 +24,7 @@ export const surveyService = {
       throw new Error();
     }
 
-    const existing = await surveyService.getAll();
+    const existing = await getResponse();
     const payload = {
       ...surveyData,
       id: crypto.randomUUID(),
@@ -32,9 +32,17 @@ export const surveyService = {
     }
     existing.push(payload);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
-  },
+  }
 
-  clear(): void {
+  const clear = (): void => {
     localStorage.removeItem(STORAGE_KEY);
-  },
-};
+  }
+
+  return {
+    getResponse,
+    save,
+    clear
+  }
+}
+
+export default useSurveyService;
