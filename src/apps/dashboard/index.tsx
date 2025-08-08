@@ -7,20 +7,27 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
+import { NavLink } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { surveyService } from '@/shared/services/survey';
+
+import useSurveyService from '@/shared/services/survey';
 import { Analytics, SurveyResponse } from '@/shared/types';
 import { computeAnalytics } from '@/shared/utils/analytics';
-import { formatDate } from '@/shared/utils/DateTime';
+import { formatDate } from '@/shared/utils/date-time';
+import { ROUTES } from '@/shared/routes';
+import Button from '@/shared/components/Button';
+import ResponseTable from '@/apps/dashboard/components/ResponseTable';
 
 export default function Dashboard() {
   const [responses, setResponses] = useState<SurveyResponse[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
 
+  const { getResponse } = useSurveyService();
+
   // fetch survey responses on mount
   useEffect(() => {
     async function fetchSurveyResponses(): Promise<void> {
-      const responses = await surveyService.getAll();
+      const responses = await getResponse();
       setResponses(responses);
 
       const analyticsData = computeAnalytics(responses);
@@ -28,9 +35,19 @@ export default function Dashboard() {
     }
 
     fetchSurveyResponses();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   if (!analytics) return <div className="flex items-center justify-center h-screen w-screen">Loading...</div>
+
+  if (analytics.totalResponses === 0) return <div className="flex items-center justify-center h-screen w-screen">
+    <div className="grid gap-2">
+      <div className="text-center">No responses yet.</div>
+      <Button>
+        <NavLink to={ROUTES.SURVEY}>Add response here</NavLink>
+      </Button>
+    </div>
+  </div>
 
   return (
     <div className="space-y-6">
@@ -74,31 +91,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      <Card>
-        <h3 className="font-medium mb-2">Latest Responses (Latest 10)</h3>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left border-b">
-              <th className="p-2 w-[15%]">Date</th>
-              <th className="p-2">Department</th>
-              <th className="p-2 text-center">Satisfaction</th>
-              <th className="p-2 text-center">NPS</th>
-              <th className="p-2">Feedback</th>
-            </tr>
-          </thead>
-          <tbody>
-            {responses.slice(0,10).map((r) => (
-              <tr key={r.id} className="border-b">
-                <td className="p-2">{formatDate(r.submittedAt)}</td>
-                <td className="p-2">{r.department}</td>
-                <td className="p-2 text-center">{r.satisfaction}</td>
-                <td className="p-2 text-center">{r.nps}</td>
-                <td className="p-2">{r.feedback || '-'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+      <ResponseTable responses={responses} />
     </div>
   );
 }

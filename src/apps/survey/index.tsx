@@ -2,11 +2,11 @@ import { type SubmitHandler, useForm, Controller } from 'react-hook-form';
 
 import Button from '@/shared/components/Button';
 import Card from '@/shared/components/Card';
-import { surveyService } from '@/shared/services/survey';
-import StarRating from '@/shared/components/StarRating';
-import NumberRating from '@/shared/components/NumberRating';
+import useSurveyService from '@/shared/services/survey';
+import StarRating from '@/apps/survey/components/StarRating';
+import NumberRating from '@/apps/survey/components/NumberRating';
 import { type Survey } from '@/shared/types';
-import FormError from '@/shared/components/FormError';
+import FormError from '@/apps/survey/components/FormError';
 
 const departments = [
   'Engineering',
@@ -24,15 +24,9 @@ export default function Survey() {
     reset,
     control,
     clearErrors
-  } = useForm<Survey>({
-    defaultValues: {
-      satisfaction: 0,
-      nps: -1,
-      department: '',
-      feedback: ''
-    },
-    mode: 'onSubmit'
-  });
+  } = useForm<Survey>();
+
+  const { save } = useSurveyService();
 
   const onSubmit: SubmitHandler<Survey> = async (data: Survey) => {
     if (data.satisfaction === 0) {
@@ -48,7 +42,7 @@ export default function Survey() {
     }
 
     try {
-      await surveyService.save(data);
+      await save(data);
       console.log('Survey submitted:', data);
       reset();
     } catch {
@@ -63,14 +57,20 @@ export default function Survey() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block mb-1 font-medium">
-            1. Rate your job satisfaction
+            Your name
           </label>
           <input
-            type="hidden"
-            {...register('satisfaction', {
-              validate: (v) => v > 0 || 'Satisfaction is required.',
-            })}
+            {...register('name', { required: 'Name is required' })}
+            placeholder='Enter your name'
+            className="border rounded px-3 py-2 w-full"
+            type="text"
           />
+          <FormError message={errors.name?.message} />
+        </div>
+        <div>
+          <label className="block mb-1 font-medium">
+            Rate your job satisfaction
+          </label>
           <Controller
             name="satisfaction"
             control={control}
@@ -91,7 +91,7 @@ export default function Survey() {
 
         <div>
           <label className="block mb-1 font-medium">
-            2. How likely are you to recommend us?
+            How likely are you to recommend us?
           </label>
           <Controller
             name="nps"
@@ -113,13 +113,13 @@ export default function Survey() {
 
         <div>
           <label className="block mb-1 font-medium">
-            3. Your department
+            Your department
           </label>
           <select
             {...register('department', { required: 'Please select a department' })}
             className="border rounded px-3 py-2 w-full"
           >
-            <option value="">Select a department</option>
+            <option value="" className="hidden">Select a department</option>
             {departments.map((dept) => (
               <option key={dept} value={dept}>{dept}</option>
             ))}
@@ -129,7 +129,7 @@ export default function Survey() {
 
         <div>
           <label className="block mb-1 font-medium">
-            4. Additional feedback (optional)
+            Additional feedback (optional)
           </label>
           <textarea
             {...register('feedback')}
@@ -142,7 +142,7 @@ export default function Survey() {
           <Button type="submit" disabled={isSubmitting}>
             Submit
           </Button>
-          <Button onClick={() => reset()}>
+          <Button type="button" onClick={() => reset()}>
             Clear
           </Button>
         </div>

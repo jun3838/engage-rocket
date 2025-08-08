@@ -1,4 +1,5 @@
 export interface Survey {
+  name: string;
   satisfaction: number;
   nps: number;
   department: string;
@@ -6,11 +7,6 @@ export interface Survey {
 }
 
 export interface SurveyResponse extends Survey {
-  id: string;
-  submittedAt: string; // ISO date string
-}
-
-export interface SurveyPayload extends Survey {
   id: string;
   submittedAt: string; // ISO date string
 }

@@ -57,7 +57,9 @@ function generateDepartmentSatisfaction(responses: SurveyResponse[]) {
  */
 export function computeAnalytics(responses: SurveyResponse[]): Analytics {
   const totalResponses = responses.length;
-  const avgSatisfaction = responses.reduce((sum, r) => sum + Number(r.satisfaction), 0) / totalResponses;
+  const avgSatisfaction = totalResponses
+    ? responses.reduce((sum, r) => sum + Number(r.satisfaction), 0) / totalResponses
+    : 0
   const npsScore = calculateNPS(responses)
 
   const departmentBreakdown = generateDepartmentSatisfaction(responses);
