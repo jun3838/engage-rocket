@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import useSurveyService from '@/shared/services/survey';
 import { Analytics, SurveyResponse } from '@/shared/types';
 import { computeAnalytics } from '@/shared/utils/analytics';
-import { formatDate } from '@/shared/utils/date-time';
 import { ROUTES } from '@/shared/routes';
 import Button from '@/shared/components/Button';
 import ResponseTable from '@/apps/dashboard/components/ResponseTable';
