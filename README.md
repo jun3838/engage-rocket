@@ -13,11 +13,13 @@ This is a React + TypeScript web application for capturing and analyzing employe
 ```
 src/
 ├── apps/
-│   └── dashboard/        # Main application views (Survey and Admin)
+│   ├── dashboard/        # dashboard related
+│   └── survey/
 ├── shared/
-│   ├── components/       # Reusable UI components (Card, Button, etc.)
+│   ├── components/       # Reusable UI components
 │   ├── services/         # Survey data storage logic
-│   └── types/            # TypeScript interfaces
+│   ├── utils/            # util/helper function
+│   └── routes/           # routes config
 ```
 
 ## Tech Stack
@@ -28,6 +30,7 @@ src/
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Recharts](https://recharts.org/en-US)
 - [react-hook-form](https://react-hook-form.com/)
+- [react-router-dom](https://www.npmjs.com/package/react-router-dom)
 
 ---
 
