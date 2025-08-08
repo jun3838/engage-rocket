@@ -1,28 +1,34 @@
-import { useState } from 'react';
-import Survey from '@/apps/dashboard/pages/Survey';
-import Dashboard from '@/apps/dashboard/pages/Dashboard';
-import Button from '@/shared/components/Button';
+import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from 'react-router-dom';
+
+import Survey from '@/apps/survey';
+import Dashboard from '@/apps/dashboard';
+import { ROUTES } from '@/shared/routes';
 
 export default function App() {
-  const [view, setView] = useState<'survey' | 'dashboard'>('survey');
-
   return (
-    <main className="min-h-screen bg-gray-100 p-6">
-      <div className="flex gap-4 mb-6">
-        <Button
-          className={view === 'survey' ? '' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}
-          onClick={() => setView('survey')}
-        >
-          Survey
-        </Button>
-        <Button
-          className={view === 'dashboard' ? '' : 'bg-gray-300 text-gray-700 hover:bg-gray-400'}
-          onClick={() => setView('dashboard')}
-        >
-          Dashboard
-        </Button>
-      </div>
-      {view === 'survey' ? <Survey /> : <Dashboard />}
-    </main>
+    <Router>
+      <main className="min-h-screen bg-gray-100">
+        <nav className="flex gap-4 bg-gray-200 p-4 shadow">
+          <NavLink to={ROUTES.DASHBOARD}>
+            {({ isActive }) => (
+              <span className={isActive ? 'text-blue-600' : 'text-gray-400 hover:text-gray-500'}>Dashboard</span>
+            )}
+          </NavLink>
+          <NavLink to={ROUTES.SURVEY}>
+            {({ isActive }) => (
+              <span className={isActive ? 'text-blue-600' : 'text-gray-400 hover:text-gray-500'}>Survey</span>
+            )}
+          </NavLink>
+        </nav>
+
+        <div className="p-6">
+          <Routes>
+            <Route path={ROUTES.HOME} element={<Navigate to="/dashboard" replace />} />
+            <Route path={ROUTES.SURVEY} element={<Survey />} />
+            <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
+          </Routes>
+        </div>
+      </main>
+    </Router>
   );
 }
